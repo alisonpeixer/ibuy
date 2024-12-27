@@ -5,13 +5,14 @@ import { viweStyle } from "@/styles/viwe";
 import { router } from "expo-router";
 
 import React, { useEffect, useState } from "react";
-import { SectionList, Text, View, StatusBar, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { SectionList, Text, View, StatusBar, StyleSheet, Image, ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback, RefreshControl } from "react-native";
 
 
 
 
 export function HomeProduct() {
 
+  const [refreshing, setRefreshing] = React.useState(false);
   const [ data, setData ] = useState<Array<any>>([]);
 
   const fetchData = async () => {
@@ -19,7 +20,7 @@ export function HomeProduct() {
       const { data } = await api.get('api/produto/');
 
       setData(data);
-      console.log(data)
+      setRefreshing(false);
 
     } catch (error) {
       console.log(error)
@@ -30,15 +31,23 @@ export function HomeProduct() {
     fetchData();
   },[]);
 
+  const onRefresh = React.useCallback(() => {
+    fetchData();
+  }, []);
 
   return (
-    <ScrollView style={{height: '100%'}}>
+    <ScrollView style={{height: '100%'}}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    
+    >
       <View>
         <Image source={require('@/images/banner-natal.jpg')} style={[{ width: '100%', height: 204, borderRadius: 10 }, viweStyle.backBlur]} />
       </View>
       
       <View style={{ marginTop: 30}}>
-        <Text style={{fontSize: 20, fontWeight: "500"}}>$Ofertas do Dia 👀</Text>
+        <Text style={{fontSize: 20, fontWeight: "500"}}>Ofertas do Dia 👀</Text>
         <ScrollView horizontal={true} style={{flex: 1, flexDirection: 'row', marginTop: 30}} showsHorizontalScrollIndicator={false}>
           { data.length ? data.map((item:any)=> (
             <TouchableWithoutFeedback key={item.id} >

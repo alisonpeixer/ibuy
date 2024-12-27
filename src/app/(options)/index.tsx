@@ -5,42 +5,43 @@ import { colors } from '@/styles/colors'
 import { navigate, NavigationOptions } from 'expo-router/build/global-state/routing'
 
 import { SvgXml } from 'react-native-svg';
-import { Container } from '@/components/Container'
-import { Button } from '@/components/Button'
+import { Container } from '@/components/molecules/Container'
+import { Button } from '@/components/atoms/Button'
 import { viweStyle } from '@/styles/viwe'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as SecureStore from 'expo-secure-store';
 import { useEffect, useState } from 'react'
+import { api } from '@/services/api'
+import { apiAuth, storageAuth } from '@/services/auth'
 
 export default function Index() {
-
     const [user,setUser] = useState<any>({});
-
-    useEffect(()=> {
-        getUser();
-    },[]);
-
-    function getUser() {
-        const userData = SecureStore.getItem('user');
-
-        if(userData) {
-            setUser(JSON.parse(userData));
-        }
-
-
-    }
-
+    
     const goTo = (href: Href, options?: NavigationOptions) => {
         return router.navigate(href);
     }
 
-    async function logout() {
-        await SecureStore.deleteItemAsync('auth');
-        await SecureStore.deleteItemAsync('refresh');
-        await SecureStore.deleteItemAsync('user');
-
-        setUser({});
+    function logout() {
+        apiAuth.logout()
+        .then(()=> {
+            setUser({});
+            storageAuth.logout();
+        })
+        .catch(err=> (
+            console.log(err)
+        ));
     }
+
+    
+    useEffect(()=> {
+        apiAuth.user()
+        .then(({data})=>{
+            setUser(data);
+        })
+        .catch(err=>(
+            err && console.log(err)
+        ));
+    },[]);
 
     
 

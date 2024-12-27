@@ -1,11 +1,11 @@
-import { Container } from "@/components/Container";
+import { Container } from "@/components/molecules/Container";
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function Product() {
   return (
     <Container>
-      <Text>product</Text>
+      <View></View>
     </Container>
   )
 }

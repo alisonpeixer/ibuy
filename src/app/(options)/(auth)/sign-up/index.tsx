@@ -1,19 +1,20 @@
+//# Libs
 import React, { useState } from 'react';
+
 import * as yup from 'yup';
+import { Link } from 'expo-router';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-
-import { launchImageLibrary } from 'react-native-image-picker';
-
-import { Input } from '@/components/Input';
-import { Container } from '@/components/Container';
-import { Button } from '@/components/Button';
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Link, router } from 'expo-router';
-import { api } from '@/services/api';
-import { HeaderAuthScreen } from '../fragments/Header';
-
 import * as ImagePicker from 'expo-image-picker';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+
+//# Local
+import { api } from '@/services/api';
+import { Button } from '@/components/atoms/Button';
+import { Input } from '@/components/atoms/Input';
+import { HeaderAuthScreen } from '@/components/molecules/Header';
+
+
 
 
 const schema = yup.object().shape({
@@ -64,28 +65,28 @@ export default function SignUp() {
         formData.append("password", body.password);
 
         const { uri, fileName, mimeType } = body.image;
-        
-        if(fileName && uri && mimeType ) {
+
+        if (fileName && uri && mimeType) {
             formData.append("image", {
-                name: fileName ,
+                name: fileName,
                 uri: uri,
                 type: mimeType
             } as any);
         }
-        
-        
+
+
         try {
             await api.postForm('auth/register', formData);
             Alert.alert('REGISTRO', 'Usuário cadastrado com sucesso.')
         } catch (error) {
-            Alert.alert('ERRO',JSON.stringify(error))
+            Alert.alert('ERRO', JSON.stringify(error))
         }
 
     }
 
 
     const pickImage = async () => {
-  
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
@@ -102,8 +103,8 @@ export default function SignUp() {
     return (
         <>
             <HeaderAuthScreen />
-            <ScrollView style={{flex: 1, padding: 10, height: 'auto'}}> 
-                <View >
+            <ScrollView style={{ flex: 1, padding: 10, height: 'auto' }}>
+                <View>
                     <Input
                         control={control}
                         name='username'
@@ -157,15 +158,15 @@ export default function SignUp() {
                     />
                     <Button
                         text='Anexar Imagem Pefil'
-                        onPress={()=>pickImage()}
+                        onPress={() => pickImage()}
                     />
                 </View>
 
-                <View style={{ justifyContent: 'center', alignSelf: 'center'}}>
+                <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
 
                     {image && <Image source={{ uri: image }} style={styles.image} />}
                 </View>
-                
+
                 <View style={{ height: 200, gap: 40, marginTop: 30 }}>
                     <Button
                         text='Registrar-se'
@@ -185,9 +186,9 @@ export default function SignUp() {
 
 const styles = StyleSheet.create({
     image: {
-        width:  300,
+        width: 300,
         height: 300,
         margin: 10,
-        borderRadius: 900 
+        borderRadius: 900
     },
 });

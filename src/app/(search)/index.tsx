@@ -5,11 +5,11 @@ import { colors } from '@/styles/colors'
 import { NavigationOptions } from 'expo-router/build/global-state/routing'
 
 import { SvgXml } from 'react-native-svg';
-import { Container } from '@/components/Container'
-import { Button } from '@/components/Button'
+import { Container } from '@/components/molecules/Container'
+import { Button } from '@/components/atoms/Button'
 import { viweStyle } from '@/styles/viwe'
 import { StatusBar } from 'expo-status-bar'
-import { Input } from '@/components/Input'
+import { Input } from '@/components/atoms/Input'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 export default function Index() {

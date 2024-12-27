@@ -6,16 +6,23 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { Button } from '@/components/Button';
-import { Input } from '@/components/Input';
-import { Container } from "@/components/Container";
-import { Link,router} from "expo-router";
+import { Button } from '@/components/atoms/Button';
+import { Input } from '@/components/atoms/Input';
+import { Container } from "@/components/molecules/Container";
+
+
+
+import { Link,Redirect,router, useNavigation, useRouter} from "expo-router";
+
+
 
 
 import * as SecureStore from 'expo-secure-store';
 
-import { HeaderAuthScreen } from "../fragments/Header";
-import { api } from "@/services/api";
+
+import { apiAuth, storageAuth } from "@/services/auth";
+import { HeaderAuthScreen } from "@/components/molecules/Header";
+
 
 
 const schema = yup.object().shape({
@@ -30,6 +37,7 @@ const schema = yup.object().shape({
 
 export default function SignIn() {
 
+    const useNavigatio = useNavigation();
 
     const { control, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm({
         resolver: yupResolver(schema),
@@ -40,64 +48,63 @@ export default function SignIn() {
     });
 
     const onPressSend = async (body: any) => {
-        await api.postForm('auth/v1/login/',body).then( async ({data})=>{
-            await SecureStore.setItemAsync('auth', JSON.stringify(data['access']));
-            await SecureStore.setItemAsync('refresh', JSON.stringify(data['refresh']));
-
-            await SecureStore.setItemAsync('user', JSON.stringify(data['user']));
-            router.push('/(options)')
+        apiAuth.login(body).then(({data})=>{
+            storageAuth.login(data);
+            router.push('/(options)');
 
         }).catch((erro)=>{
             console.log(erro);
             Alert.alert('ERRO', `Erro ao efetuar o Login.\n${JSON.stringify(erro)}`);
-        
         });
     }
 
 
 
     return (
-        <Container showNav={false}>
-            <HeaderAuthScreen/>
+        <>
+            <Container showNav={false}>
+                <HeaderAuthScreen/>
 
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Image source={require('@/images/power_buy.png')} style={{width: 355, height: 81}} />
-            </View>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <Image source={require('@/images/power_buy.png')} style={{width: 355, height: 81}} />
+                </View>
 
-            <View style={{height: '40%'}}>
-                <Input 
-                    control={control}
-                    name='email'
-                    rules={{
-                    required: true
-                    }}
-                    placeholder='E-mail'
-                    autoCapitalize='none'
-                    errors={errors}
-                />
-                <Input 
-                    control={control}
-                    name='password'
-                    rules={{
+                <View style={{height: '40%'}}>
+                    <Input 
+                        control={control}
+                        name='email'
+                        rules={{
                         required: true
-                    }}
-                    placeholder='Senha'
-                    secureTextEntry={true}
-                    autoCapitalize='none'
-                    errors={errors}
-                />
-                <Button
-                    text='Logar'
-                    onPress={handleSubmit(onPressSend)}
-                    disabled={!isValid || isSubmitting}
-                />
-            </View>
-            <View style={{height: '20%',gap: 20, justifyContent: 'center'}}>
-                <Link href="/sign-up" style={{textAlign: 'center'}}>
-                    Não possui uma conta? <Text  style={{color:'blue'}}> Registra-se.</Text>
-                </Link>
-            </View>
-        </Container>
+                        }}
+                        placeholder='E-mail'
+                        autoCapitalize='none'
+                        errors={errors}
+                    />
+                    <Input 
+                        control={control}
+                        name='password'
+                        rules={{
+                            required: true
+                        }}
+                        placeholder='Senha'
+                        secureTextEntry={true}
+                        autoCapitalize='none'
+                        errors={errors}
+                    />
+                    <Button
+                        text='Logar'
+                        onPress={handleSubmit(onPressSend)}
+                        disabled={!isValid || isSubmitting}
+                    />
+                </View>
+                <View style={{height: '20%',gap: 20, justifyContent: 'center'}}>
+                    <Link href="/sign-up" style={{textAlign: 'center'}}>
+                        Não possui uma conta? <Text  style={{color:'blue'}}> Registra-se.</Text>
+                    </Link>
+                </View>
+            </Container>
+        
+        </>
     )
 }
 
