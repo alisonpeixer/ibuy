@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Href, useRouter, useSegments } from "expo-router";
+import { useRouter, useSegments } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 import style from "./styles";
 import { ButtonMenuProp } from "@/types/buttonMenu";
 import { appHidenMenuScreen, appItensMenu } from "@/config/appMenu";
 
+import * as SecureStore from 'expo-secure-store';
 
 interface PageProps {
   children?: React.ReactNode;
@@ -18,7 +19,8 @@ export function MenuBar({children}:PageProps){
   const segments = useSegments();
   const [showMenu, setShowMenu] = useState(true);
 
-  const BtnMenu = ({routerPath,icon,label}: ButtonMenuProp) => ( 
+  const BtnMenu = ({routerPath,icon,label, viweAuth}: ButtonMenuProp) => ( 
+    (SecureStore.getItem('auth') === null && viweAuth) ? <></>:
     <View style={{ width: 60, justifyContent: 'center', alignItems: 'center' }}>
       <TouchableOpacity onPress={() => router.navigate(routerPath)} style={style.headerBackBtn}>
     
@@ -46,12 +48,13 @@ export function MenuBar({children}:PageProps){
 
       <View style={[style.headerContent]}>
         {
-          appItensMenu.map(({icon,label,routerPath},index)=> (
+          appItensMenu.map(({icon,label,routerPath,viweAuth},index)=> (
             <BtnMenu
               key={index}
               icon={icon}
               label={label}
               routerPath={routerPath}
+              viweAuth={viweAuth}
             />
           ))
         }

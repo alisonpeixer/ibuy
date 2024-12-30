@@ -5,17 +5,26 @@ export const appItensMenu = [
   {
     icon: "home-outline",
     label: "Home",
-    routerPath: "/(app)"
+    routerPath: "/(store)",
+    viweAuth: false
   },
   {
     icon: "search",
     label: "Pesquisar",
     routerPath: "/(search)",
+    viweAuth: false
+  },
+  {
+    icon: "cart",
+    label: "Carrinho",
+    routerPath: "/(options)/cart",
+    viweAuth: true
   },
   {
     icon: "ellipsis-horizontal-outline",
     label: "Opções",
-    routerPath: "/(options)"
+    routerPath: "/(options)",
+    viweAuth: false
   }
 ] as ButtonMenuProp[];
 

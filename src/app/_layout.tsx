@@ -11,6 +11,8 @@ import { MenuBar } from '@/components/molecules/MenuBar';
 import { ButtonMenuProp } from '@/types/buttonMenu';
 
 
+
+
 export default function Layout() {
   return (
     <SafeAreaProvider >

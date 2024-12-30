@@ -5,4 +5,5 @@ export interface ButtonMenuProp   {
   routerPath: Href; 
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
+  viweAuth: boolean;
 };

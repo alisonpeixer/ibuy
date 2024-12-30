@@ -74,13 +74,13 @@ export default function SignUp() {
             } as any);
         }
 
-
-        try {
-            await api.postForm('auth/register', formData);
-            Alert.alert('REGISTRO', 'Usuário cadastrado com sucesso.')
-        } catch (error) {
-            Alert.alert('ERRO', JSON.stringify(error))
-        }
+        await api.postForm('auth/register', formData)
+        .then(({data})=>{
+            Alert.alert('REGISTRO', 'Usuário cadastrado com sucesso.');
+        })
+        .catch((error)=>{
+            Alert.alert('ERRO', JSON.stringify(error));
+        })
 
     }
 
@@ -104,7 +104,7 @@ export default function SignUp() {
         <>
             <HeaderAuthScreen />
             <ScrollView style={{ flex: 1, padding: 10, height: 'auto' }}>
-                <View>
+                <View style={{gap: 30}}>
                     <Input
                         control={control}
                         name='username'
@@ -114,6 +114,7 @@ export default function SignUp() {
                         placeholder='Username'
                         autoCapitalize='none'
                         errors={errors}
+                        type="form"
                     />
                     <Input
                         control={control}
@@ -124,6 +125,7 @@ export default function SignUp() {
                         placeholder='Email'
                         autoCapitalize='none'
                         errors={errors}
+                        type="form"
                     />
                     <Input
                         control={control}
@@ -134,6 +136,7 @@ export default function SignUp() {
                         placeholder='Nome'
                         autoCapitalize='none'
                         errors={errors}
+                        type="form"
                     />
                     <Input
                         control={control}
@@ -144,6 +147,7 @@ export default function SignUp() {
                         placeholder='Sobrenome'
                         autoCapitalize='none'
                         errors={errors}
+                        type="form"
                     />
                     <Input
                         control={control}
@@ -155,9 +159,10 @@ export default function SignUp() {
                         secureTextEntry={true}
                         autoCapitalize='none'
                         errors={errors}
+                        type="form"
                     />
                     <Button
-                        text='Anexar Imagem Pefil'
+                        label='Anexar Imagem Pefil'
                         onPress={() => pickImage()}
                     />
                 </View>
@@ -169,7 +174,7 @@ export default function SignUp() {
 
                 <View style={{ height: 200, gap: 40, marginTop: 30 }}>
                     <Button
-                        text='Registrar-se'
+                        label='Registrar-se'
                         onPress={handleSubmit(onPressSend)}
                         disabled={!isValid || isSubmitting}
                     />

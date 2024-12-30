@@ -1,10 +1,10 @@
 import React from "react";
 
 
-import { StyleProp, View, ViewStyle } from "react-native";
+import { ScrollView, ScrollViewBase, ScrollViewProps, StyleProp, View, ViewStyle } from "react-native";
 import style from "./styles";
 
-export interface Props {
+export interface Props  extends ScrollViewProps {
   children: React.ReactNode;
   customStyle?: StyleProp<ViewStyle>;
   showNav?: boolean;
@@ -15,9 +15,9 @@ export interface Props {
 
 export function Container({ children,customStyle, ...props }: Props) {
   return (
-    <View style={[style.container, customStyle]} {...props}>
+    <ScrollView style={[style.container, customStyle]} {...props}>
       {children}
-    </View>
+    </ScrollView>
   )
 }
 

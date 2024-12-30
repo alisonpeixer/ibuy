@@ -16,13 +16,7 @@ export const apiAuth = {
   },
   user:(): Promise<AxiosResponse<any,any>> => {
     return new Promise( async (resolve,reject)=> {
-      if(await SecureStore.getItemAsync('auth')) {
-        resolve(await api.get('auth/v1/user/'));
-      
-      } else {
-        reject(false);
-
-      }
+      resolve(await api.get('auth/custom/user/'));
     });
     
   },

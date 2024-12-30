@@ -1,26 +1,16 @@
-import React, { useCallback, useEffect } from "react";
-
-import { View, Image, Text, TouchableOpacity, Alert } from 'react-native'
-
+//# Libs
+import React from "react";
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { Link,router, useNavigation} from "expo-router";
+import { View, Image, Text, Alert } from 'react-native'
 
-import { Button } from '@/components/atoms/Button';
+//# Local
 import { Input } from '@/components/atoms/Input';
-import { Container } from "@/components/molecules/Container";
-
-
-
-import { Link,Redirect,router, useNavigation, useRouter} from "expo-router";
-
-
-
-
-import * as SecureStore from 'expo-secure-store';
-
-
+import { Button } from '@/components/atoms/Button';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { apiAuth, storageAuth } from "@/services/auth";
+import { Container } from "@/components/molecules/Container";
 import { HeaderAuthScreen } from "@/components/molecules/Header";
 
 
@@ -37,8 +27,6 @@ const schema = yup.object().shape({
 
 export default function SignIn() {
 
-    const useNavigatio = useNavigation();
-
     const { control, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -52,13 +40,11 @@ export default function SignIn() {
             storageAuth.login(data);
             router.push('/(options)');
 
-        }).catch((erro)=>{
-            console.log(erro);
-            Alert.alert('ERRO', `Erro ao efetuar o Login.\n${JSON.stringify(erro)}`);
+        }).catch((error)=>{
+            console.log(error);
+            Alert.alert('ERRO', `Erro ao efetuar o Login.\n${JSON.stringify(error.response['data'])}`);
         });
     }
-
-
 
     return (
         <>
@@ -69,16 +55,18 @@ export default function SignIn() {
                     <Image source={require('@/images/power_buy.png')} style={{width: 355, height: 81}} />
                 </View>
 
-                <View style={{height: '40%'}}>
+                <View style={{height: '40%', gap: 20}}>
                     <Input 
                         control={control}
                         name='email'
                         rules={{
-                        required: true
+                            required: true
                         }}
+                        errors={errors}
                         placeholder='E-mail'
                         autoCapitalize='none'
-                        errors={errors}
+                        type="form"
+                        
                     />
                     <Input 
                         control={control}
@@ -90,14 +78,15 @@ export default function SignIn() {
                         secureTextEntry={true}
                         autoCapitalize='none'
                         errors={errors}
+                        type="form"
                     />
                     <Button
-                        text='Logar'
+                        label='Logar'
                         onPress={handleSubmit(onPressSend)}
                         disabled={!isValid || isSubmitting}
                     />
                 </View>
-                <View style={{height: '20%',gap: 20, justifyContent: 'center'}}>
+                <View style={{height: 100,gap: 20, justifyContent: 'center'}}>
                     <Link href="/sign-up" style={{textAlign: 'center'}}>
                         Não possui uma conta? <Text  style={{color:'blue'}}> Registra-se.</Text>
                     </Link>
