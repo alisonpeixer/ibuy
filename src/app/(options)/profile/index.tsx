@@ -1,6 +1,5 @@
 import { Input } from "@/components/atoms/Input";
 import { Container } from "@/components/molecules/Container"
-import { HeaderAuthScreen } from "@/components/molecules/Header"
 import { apiAuth } from "@/services/auth";
 import { viweStyle } from "@/styles/viwe";
 import { User } from "@/types/user";
@@ -139,8 +138,7 @@ export default function Profile() {
 
 
   return (
-    <Container>
-      <HeaderAuthScreen />
+    <Container showNavHeader={true}>
       <View style={[{ width: '100%', justifyContent: 'center', alignItems: 'center', gap: 20 }]}>
         <TouchableOpacity style={{ borderRadius: 900, borderWidth: 0.3, width: 200, height: 200 }} onPress={pickImage}>
           <Image src={image} style={[{ borderRadius: 900, borderWidth: 0.3, width: 200, height: 200 }]} />

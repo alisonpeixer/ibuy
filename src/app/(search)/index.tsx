@@ -1,91 +1,109 @@
-import { Href, Link } from 'expo-router'
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native'
-import { router } from 'expo-router'
-import { colors } from '@/styles/colors'
-import { NavigationOptions } from 'expo-router/build/global-state/routing'
+import { View, Text, ScrollView, RefreshControl, TouchableWithoutFeedback, NativeSyntheticEvent, TextInputSubmitEditingEventData, Alert, StyleSheet } from 'react-native';
+import { Input } from '@/components/atoms/Input';
+import React, { useEffect, useState, useCallback } from 'react';
+import { api } from '@/services/api';
+import { Banner } from '@/components/organisms/Banner';
+import { Card } from '@/components/atoms/Card';
+import { router } from 'expo-router';
 
-import { SvgXml } from 'react-native-svg';
-import { Container } from '@/components/molecules/Container'
-import { Button } from '@/components/atoms/Button'
-import { viweStyle } from '@/styles/viwe'
-import { StatusBar } from 'expo-status-bar'
-import { Input } from '@/components/atoms/Input'
-import Ionicons from '@expo/vector-icons/Ionicons'
+interface Produto {
+  id: string;
+  image: string;
+  title: string;
+  preco: number;
+  preco_antigo: number;
+}
 
 export default function Index() {
+  const [data, setData] = useState<Produto[]>([]);
+  const [searchText, setSearchText] = useState<string>('');
+  const [refreshing, setRefreshing] = useState(false);
 
-  const goTo = (href: Href, options?: NavigationOptions) => {
-    return router.navigate(href);
-  }
+  const fetchData = async () => {
+    try {
+      setRefreshing(true);
+      const response = await api.get('api/produto/', {
+        params: {
+          search: searchText,
+        },
+      });
+
+
+      if (!response.data.length) {
+        Alert.alert('Busca de produto', 'Nem um produto encotrado para a busca atual.');
+        setSearchText('');
+      } else {
+        setData(response.data);
+      }
+
+      setRefreshing(false);
+
+    } catch (error) {
+      console.error('Erro ao buscar dados', error);
+      setRefreshing(false);
+    }
+  };
+
+  const goToProduto = (id: string) => {
+    router.push(`/(store)/product/${id}`);
+  };
+
+
+  const onRefresh = useCallback(() => {
+    fetchData();
+  }, []);
+
+
 
   return (
-    <Container customStyle={style.container}>
-      <View style={[style.headerContainer, viweStyle.backBlur]}>
-          <Text style={{fontSize: 17, fontWeight: '400'}}>Busca</Text>
-      </View>
+    <View style={{ padding: 10, gap: 7 }}>
       <View style={{padding: 20}}>
-        <View style={style.inputContainer}>
-          <TextInput
-            style={style.searchInput}
-            placeholder="Tenis, Computador..."
-            />
-          <Ionicons name="search" size={22} style={style.icon} />
-        </View>
+        <Input 
+          placeholder="Carrinho, Parafuso..." 
+          icon="search" size={22} 
+          onSubmitEditing={fetchData} onChangeText={setSearchText} value={searchText} 
+          customStyle={{borderRadius: 20}}
+        />
       </View>
-
-    </Container>
-  )
+      <ScrollView
+        style={{ height: '100%', alignContent: 'center'}}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            showsHorizontalScrollIndicator={false}
+          >
+            {data.map((item) => (
+              <Card
+                key={item.id}
+                src={item.image}
+                description={item.title}
+                price={{
+                  price: item.preco,
+                  oldPrice: item.preco_antigo,
+                }}
+                onPress={() => goToProduto(item.id)}
+              />
+            ))}
+          </ScrollView>
+      </ScrollView>
+    </View>
+  );
 }
 
 
-const style = StyleSheet.create({
-  container: {
-    height: '100%',
-    alignContent: 'center',
-    gap: 20,
-    padding: 0
-  },
-  title: {
-    fontSize: 34,
-    fontWeight: '400',
-    textAlign: 'center',
-    fontFamily: 'Inter_200ExtraLight',
-  },
-  button: {
-    width: 180
-  },
-  btnFooter: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    width: '100%',
-    gap: 20,
-    padding: 10,
-    justifyContent: 'center',
 
-    borderRadius: 30,
+const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1, 
+    justifyContent: 'center',  
+    alignItems: 'center',        
+    gap: 10, 
   },
-  btnText: {
-    textAlign: 'center',
-    fontSize: 20
+  item: {
+    backgroundColor: '#ddd',
+    padding: 20,
+    margin: 10,
+    borderRadius: 5,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    width: '100%',
-  },
-  searchInput: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    fontSize: 16,
-  },
-  icon: {
-    marginLeft: 10, // Espaçamento entre o campo de texto e o ícone
-  },
-  headerContainer: {height: 50, justifyContent: 'center', paddingLeft: 10, borderBottomWidth: 0.2, borderColor: colors.neutral[400], backgroundColor:'#fff'}
-
-})
+});

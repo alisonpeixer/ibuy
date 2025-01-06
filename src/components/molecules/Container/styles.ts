@@ -9,13 +9,6 @@ const style = StyleSheet.create({
     fontFamily: 'Inter_400Regular',
     backgroundColor: colors.neutral[50]
   },
-  headerContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 10,
-    backgroundColor: colors.neutral[50]
-  },
   headerContent: {
     width: '100%',
     position: 'relative',
@@ -49,7 +42,8 @@ const style = StyleSheet.create({
   textMenuAtived: {
     fontSize: 10, 
     textAlign: 'center'
-  }
+  },
+  headerContainer: {height: 50, justifyContent: 'center', paddingLeft: 10, borderBottomWidth: 0.2, borderColor: colors.neutral[400], backgroundColor:'#fff'}
 });
 
 

@@ -1,4 +1,5 @@
 export const colors = {
+    primary: '#1A9EFF', 
     blue: {
         100: '#E0F7FF',
         200: '#B3ECFF',
@@ -11,34 +12,34 @@ export const colors = {
         900: '#005C99'
     },
     neutral: {
-        50: '#fafafa',   // Cinza Claro
-        100: '#f5f5f5',  // Cinza Muito Claro
-        200: '#e5e5e5',  // Cinza Muito Claro
-        300: '#d4d4d4',  // Cinza Claro
-        400: '#a3a3a3',  // Cinza Médio Claro
-        500: '#737373',  // Cinza Médio
-        600: '#525252',  // Cinza Médio Escuro
-        700: '#404040',  // Cinza Escuro
-        800: '#262626',  // Cinza Muito Escuro
-        900: '#171717',  // Quase Preto
-        950: '#0a0a0a',  // Preto
+        50: '#fafafa',   
+        100: '#f5f5f5',  
+        200: '#e5e5e5',  
+        300: '#d4d4d4',  
+        400: '#a3a3a3',  
+        500: '#737373',  
+        600: '#525252',  
+        700: '#404040',  
+        800: '#262626',  
+        900: '#171717',  
+        950: '#0a0a0a',  
     },    
     complementary: {
-        100: '#FFB74D' ,  // Laranja Claro
-        200: '#A5D6A7' ,  // Verde Claro
-        300: '#FFEB3B' ,  // Amarelo Claro
+        100: '#FFB74D' , 
+        200: '#A5D6A7' , 
+        300: '#FFEB3B' , 
     },
     pastel: {
-        100: '#F8BBD0' ,  // Rosa Claro
-        200: '#D1C4E9' ,  // Lavanda
+        100: '#F8BBD0' ,
+        200: '#D1C4E9' ,
     },
     earthy: {
-        100: '#F5F5DC' ,  // Bege Claro
-        200: '#BCAAA4' ,  // Marrom Claro
+        100: '#F5F5DC' , 
+        200: '#BCAAA4' , 
     },
     highlight: {
-        100: '#FF6F61' ,  // Coral
-        200: '#FFB300' ,  // Amarelo-Ouro
+        100: '#FF6F61' , 
+        200: '#FFB300' , 
     },
     red: {
         50:  '#fef2f2',
@@ -66,5 +67,4 @@ export const colors = {
         900: '#14532d',
         950: '#052e16'
     },
-    
-}
+};

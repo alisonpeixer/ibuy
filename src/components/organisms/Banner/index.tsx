@@ -5,7 +5,7 @@ import style from "./styles"
 export function Banner() {
   return (
     <View>
-      <Image source={require('@/images/banner-natal.jpg')} style={[style.image]} />
+      <Image source={require('@/images/banner.jpg')} style={[style.image]} />
     </View>
   )
 }

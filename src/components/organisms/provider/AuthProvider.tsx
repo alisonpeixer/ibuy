@@ -15,9 +15,10 @@ export function AuthProvider({children}: Props) {
   const segments = useSegments();
   
   const validUser =  async () => {
+    if(await SecureStore.getItemAsync('auth') !== null)
     await api.get('auth/custom/user/')
     .then( async ({data})=> {
-      if(segments.length > 0 && segments[2] && ['sign-in','sign-up'].includes(segments[2])){
+      if(segments.length > 0 && (segments[2] && ['sign-in','sign-up'].includes(segments[2]))){
         SecureStore.getItem('auth') && router.push('/(options)');
       }
       
@@ -26,10 +27,10 @@ export function AuthProvider({children}: Props) {
       }
     })
     .catch(async (error)=>{
-      console.log('ERRO NO AuthProvider',error);
-      if(await SecureStore.getItemAsync('auth') !== null){
+      console.log('ERRO NO AuthProvider',error.response.status);
+      if(await SecureStore.getItemAsync('auth') !== null || error.response.status === 401){
         storageAuth.logout();
-
+        router.push('/');
       }
     });
   }

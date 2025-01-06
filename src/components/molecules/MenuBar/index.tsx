@@ -32,6 +32,7 @@ export function MenuBar({children}:PageProps){
   );
 
   useEffect(() => {
+    console.log(segments.join('/'))
     setShowMenu(!appHidenMenuScreen.map(item=> item.toString()).includes(`/${segments.join('/')}`));
   }, [segments]);
   

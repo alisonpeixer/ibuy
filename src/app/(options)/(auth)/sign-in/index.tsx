@@ -1,9 +1,9 @@
 //# Libs
-import React from "react";
+import React, { useState } from "react";
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { Link,router, useNavigation} from "expo-router";
-import { View, Image, Text, Alert } from 'react-native'
+import { Link, router } from "expo-router";
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 //# Local
 import { Input } from '@/components/atoms/Input';
@@ -11,21 +11,22 @@ import { Button } from '@/components/atoms/Button';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { apiAuth, storageAuth } from "@/services/auth";
 import { Container } from "@/components/molecules/Container";
-import { HeaderAuthScreen } from "@/components/molecules/Header";
+import Toast from "react-native-toast-message";
 
-
-
+//# Schema de validação
 const schema = yup.object().shape({
     email: yup
         .string()
-        .required('Login e Obrigatorio'),
+        .email('Email inválido')
+        .required('Login é obrigatório'),
     password: yup
         .string()
-        .required('Senha e Obrigatorio')
-        .min(1, 'Tamnho minimo da senha "8 Caracteres"'),
+        .required('Senha é obrigatória')
+        .min(8, 'Tamanho mínimo da senha é 8 caracteres'),
 });
 
 export default function SignIn() {
+    const [response,setResponse] = useState<string>('');
 
     const { control, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm({
         resolver: yupResolver(schema),
@@ -35,65 +36,122 @@ export default function SignIn() {
         },
     });
 
+
     const onPressSend = async (body: any) => {
-        apiAuth.login(body).then(({data})=>{
+        setResponse('');
+        
+        apiAuth.login(body).then(({data}) => {
+       
+            Toast.show({
+              type: 'success',
+              text1: 'Bem-Vindo(a)!',
+              text2: 'Login efetuado com sucesso! 😊',
+              position: 'bottom',
+              visibilityTime: 3000,
+            });
+
+     
             storageAuth.login(data);
             router.push('/(options)');
+        }).catch((error) => {
+            let erros = '';
 
-        }).catch((error)=>{
-            console.log(error);
-            Alert.alert('ERRO', `Erro ao efetuar o Login.\n${JSON.stringify(error.response['data'])}`);
+            if(error.response['data']['non_field_errors'].length > 0){
+                for(const item of error.response['data']['non_field_errors']){
+                    erros += `${item}\n`;
+                }
+            } else {
+                erros = error.response['data'];
+            }
+
+            setResponse(erros);
+
+            Toast.show({
+              type: 'error',
+              text1: 'Erro no login',
+              text2: error.response ? JSON.stringify(erros) : 'Erro desconhecido',
+              position: 'top',
+              visibilityTime: 3000,
+              autoHide: true,
+            });
         });
     }
 
     return (
-        <>
-            <Container showNav={false}>
-                <HeaderAuthScreen/>
+        <Container showNav={false} showNavHeader={true}>
+            <View style={styles.header}>
+                <Image source={require('@/images/power_buy.png')} style={styles.logo} />
+            </View>
 
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                    <Image source={require('@/images/power_buy.png')} style={{width: 355, height: 81}} />
-                </View>
+            <View style={styles.formContainer}>
+                <Input
+                    control={control}
+                    name='email'
+                    rules={{ required: true }}
+                    errors={errors}
+                    placeholder='E-mail'
+                    autoCapitalize='none'
+                    type="form"
+                />
+                <Input
+                    control={control}
+                    name='password'
+                    rules={{ required: true }}
+                    placeholder='Senha'
+                    secureTextEntry={true}
+                    autoCapitalize='none'
+                    errors={errors}
+                    type="form"
+                />
+                <Button
+                    label='Logar'
+                    onPress={handleSubmit(onPressSend)}
+                    disabled={!isValid || isSubmitting}
+                />
+                {response.length > 0 && <Text style={{ color:'red', textAlign: 'center' }}>{response}</Text>}
+            </View>
 
-                <View style={{height: '40%', gap: 20}}>
-                    <Input 
-                        control={control}
-                        name='email'
-                        rules={{
-                            required: true
-                        }}
-                        errors={errors}
-                        placeholder='E-mail'
-                        autoCapitalize='none'
-                        type="form"
-                        
-                    />
-                    <Input 
-                        control={control}
-                        name='password'
-                        rules={{
-                            required: true
-                        }}
-                        placeholder='Senha'
-                        secureTextEntry={true}
-                        autoCapitalize='none'
-                        errors={errors}
-                        type="form"
-                    />
-                    <Button
-                        label='Logar'
-                        onPress={handleSubmit(onPressSend)}
-                        disabled={!isValid || isSubmitting}
-                    />
-                </View>
-                <View style={{height: 100,gap: 20, justifyContent: 'center'}}>
-                    <Link href="/sign-up" style={{textAlign: 'center'}}>
-                        Não possui uma conta? <Text  style={{color:'blue'}}> Registra-se.</Text>
-                    </Link>
-                </View>
-            </Container>
-        
-        </>
-    )
+            <View style={styles.footerContainer}>
+                <Link href="/sign-up" style={styles.link}>
+                    <Text style={styles.registerText}>Não possui uma conta? <Text style={styles.registerLink}>Registre-se.</Text></Text>
+                </Link>
+            </View>
+        </Container>
+    );
 }
 
+// Estilos ajustados
+const styles = StyleSheet.create({
+    header: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 40,
+    },
+    logo: {
+        width: 300,
+        height: 80,
+        resizeMode: 'contain',
+    },
+    formContainer: {
+        width: '100%',
+        justifyContent: 'space-evenly',
+        gap: 20,
+        marginBottom: 40,
+    },
+    footerContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    link: {
+        textAlign: 'center',
+        fontSize: 16,
+    },
+    registerText: {
+        color: '#6e6e6e',
+    },
+    registerLink: {
+        color: '#1e90ff',
+        fontWeight: 'bold',
+    },
+});

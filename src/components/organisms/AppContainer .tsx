@@ -12,11 +12,10 @@ export function AppContainer() {
     <AuthProvider>
       <Stack
         screenOptions={{
-          animation: 'fade',
+          animation: 'flip',
           statusBarTranslucent: false,
           statusBarHidden: false,
           statusBarStyle: 'dark',
-          contentStyle: { backgroundColor: colors.neutral[50] }
         }}
       >
         <Stack.Screen name='(store)/index' options={{ headerShown: false, title: 'home' }} />
@@ -31,6 +30,10 @@ export function AppContainer() {
         <Stack.Screen name='(store)/product/[id]' options={{ headerShown: false, title: 'Produto' }} />
 
         <Stack.Screen name='(options)/cart/index' options={{ headerShown: false, title: 'Carrinho' }} />
+        <Stack.Screen name='(options)/order/index' options={{ headerShown: false, title: 'Pedido' }} />
+        <Stack.Screen name='(options)/orders/index' options={{ headerShown: false, title: 'Pedidos' }} />
+
+        <Stack.Screen name='(options)/order/[id]' options={{ headerShown: false, title: 'Dados do Pedido' }} />
       </Stack>
       <StatusBar style='dark' />
     </AuthProvider>

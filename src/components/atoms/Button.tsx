@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   danger: {
-    backgroundColor: colors.red[500], // Vermelho para indicar erro
+    backgroundColor: colors.red[500],
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   success: {
-    backgroundColor: colors.green[500], // Verde para indicar sucesso
+    backgroundColor: colors.green[500],
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',

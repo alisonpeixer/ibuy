@@ -20,14 +20,11 @@ const style = StyleSheet.create({
     justifyContent: 'space-between', 
   },
   footer: {
-
     backgroundColor: colors.neutral[50],
     padding: 10,
     borderRadius: 10,
     justifyContent:'space-between',
-    flexDirection: 'row',
     gap: 10,
-    alignItems: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 4,

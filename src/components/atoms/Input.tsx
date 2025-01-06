@@ -99,6 +99,6 @@ const style = StyleSheet.create({
         fontSize: 16,
       },
       icon: {
-        marginLeft: 10, // Espaçamento entre o campo de texto e o ícone
+        marginLeft: 10,
       },
 })

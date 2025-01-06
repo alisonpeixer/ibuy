@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "ibuy",
+    "name": "iPowerBuy",
     "slug": "ibuy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "ibuy",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -20,7 +20,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.alissonpeixer.ibuy"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#ffffff"
     },
     "web": {
       "bundler": "metro",
@@ -31,10 +38,19 @@
       "expo-router",
       "expo-font",
       "expo-secure-store",
-      "expo-image-picker"
+      "expo-image-picker",
+      "expo-splash-screen"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1f9941a5-b89d-4657-9a9a-45310d331c24"
+      }
     }
   }
 }
